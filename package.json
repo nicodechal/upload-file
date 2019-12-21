@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@types/formidable": "^1.0.31",
+    "formidable": "^1.2.1",
+    "koa": "^2.11.0",
+    "koa-static": "^5.0.0"
+  }
+}

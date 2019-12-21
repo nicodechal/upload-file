@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link href="https://fonts.googleapis.com/css?family=Fira+Sans|Noto+Sans+TC&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+  <div class="container">
+    <br><br>
+    <h2>Upload Your File!</h2>
+    <div class="file-list">
+      <div class="file-item">
+        <div class="item-info">
+          <div class="item-name">Learn Vue in Ten Minutes.zip</div>
+          <div class="item-data">512 KB | 2019-11-24 08:03:45</div>
+          <div class="item-progress-value">Pending...</div>
+        </div>
+        <div class="item-progress-bar"></div>
+      </div>
+    </div>
+
+    <button class="btn select-file">Select...</button>
+    <button class='btn upload-btn'>Upload</button>
+
+    <form class="hidden-group upload-form" action="/upload" method="post" enctype="multipart/form-data">
+      <input class="upload-file" type="file" name="file" id="file">
+    </form>
+    <br>
+
+    <h2>Status</h2>
+    <p><strong>Code: </strong><span class="code">xxx</span></p>
+    <p><strong>Data: </strong><span class="data">xxx</span></p>
+  </div>
+  <script src="index.js"></script>
+</body>
+</html>
