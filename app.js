@@ -2,19 +2,22 @@ const fs = require('fs');
 const path = require('path');
 
 const Koa = require('koa');
-const parser  = require('./parser.js');
+const koaBody  = require('koa-body');
 const koaStatic = require('koa-static');
 
 const app = new Koa();
 
-const staticPath = './public';
-const uploadPath = './public/upload';
+const staticPath = path.resolve(__dirname, 'public');
+const uploadPath = path.resolve(__dirname, 'public/upload');
 
-app.use(parser({
-  multiples: true
+app.use(koaBody({
+  multipart: true,
+  formidable: {
+    uploadDir: uploadPath
+  }
 }));
 
-app.use(koaStatic(path.join(__dirname, staticPath)));
+app.use(koaStatic(staticPath));
 
 app.use(async ctx => {
   if (ctx.path == '/') {
@@ -23,23 +26,23 @@ app.use(async ctx => {
     });
     ctx.body = fs.createReadStream(__dirname + '/public/index.html');
   } else if (ctx.path == '/upload' && ctx.method == 'POST') {
-    const { files } = ctx.request.formData;
-    const file = files.file;
-
-    if (file.name != '') {
-      fs.renameSync(file.path, path.join(uploadPath, file.name));
-      ctx.body = {
-        code: 200,
-        data: {
-          url: `http://${ctx.request.header.host}/upload/${file.name}`
-        }
-      };
-    } else {
-      ctx.body = {
-        code: 500,
-        data: 'Error'
-      };
+    let files = ctx.request.files.file;
+    if (!Array.isArray(files)) files = [files];
+    const urls = [];
+    for (const file of files) {
+      if (file.name != '') {
+        fs.renameSync(file.path, path.join(uploadPath, file.name));
+        urls.push(`http://${ctx.request.header.host}/upload/${file.name}`);
+      }
     }
+    ctx.body = {
+      code: 200,
+      data: {
+        urls,
+        success: urls.length,
+        total: files.length 
+      }
+    };
   }
 });
 

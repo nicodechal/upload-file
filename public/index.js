@@ -1,11 +1,11 @@
 window.onload = () => {
-  const code = document.querySelector('.code');
-  const data = document.querySelector('.data');
+  const state = document.querySelector('.state');
+
+  const fileList = document.querySelector('.file-list');
+
   const progressBar = document.querySelector('.item-progress-bar');
-  const uploadFile = document.querySelector('.upload-file');
-  const itemName = document.querySelector('.item-name');
-  const itemData = document.querySelector('.item-data');
   const progressValue = document.querySelector('.item-progress-value');
+
   const uploadBtn = document.querySelector('.upload-btn');
   const selectBtn = document.querySelector('.select-file');
   const form = document.querySelector('.upload-form');
@@ -13,24 +13,34 @@ window.onload = () => {
   const Progress = {
     setPercent(cur, total) {
       const percent = (100 * cur / total | 0) + '%';
-      progressBar.style.width = progressValue.innerText = percent;
+      progressBar.style.width = progressValue.textContent = percent;
     },
     setDone() {
-      progressValue.innerText = 'Done.';
+      progressValue.textContent = 'Done.';
       progressValue.classList.add('item-progress-value-done');
-      progressBar.style.width = '0';
+      progressBar.style.background = '#07d20940';
     }
   };
 
   selectBtn.addEventListener('click', () => {
-    form.querySelector('input[type="file"]').click();
-  });
+    const inputFile = document.createElement('input');
+    inputFile.name = 'file';
+    inputFile.type = 'file';
+    inputFile.classList.add('upload-file');
 
-  uploadFile.onchange = () => {
-    const { name, size, lastModified } = uploadFile.files[0];
-    itemName.innerText = name;
-    itemData.innerText = formatBytes(size) + ' | ' + formatDate(lastModified);
-  };
+    form.appendChild(inputFile);
+
+    inputFile.onchange = () => {
+      const { name, size, lastModified } = inputFile.files[0];
+      const fileItem = generateNodeByTemp('.file-item-template', {
+        '.item-name': name,
+        '.item-data': formatBytes(size) + ' | ' + formatDate(lastModified)
+      });
+      fileList.appendChild(fileItem);
+    };
+
+    inputFile.click();
+  });
 
   uploadBtn.onclick = () => {
     
@@ -41,12 +51,11 @@ window.onload = () => {
         Progress.setPercent(e.loaded, e.total);
       }
     }).then(v => {
-      const {code: c, data: d} = JSON.parse(v);
-      if (c == 200) {
+      const json = JSON.parse(v);
+      if (json.code == 200) {
         Progress.setDone();
       }
-      code.innerText = c;
-      data.innerText = d.url;
+      state.textContent = json.data.urls;
     }).catch(e => {
       console.log(e);
     });
@@ -85,4 +94,13 @@ function ajax (url, { method = 'GET', async = true, data = '', onprogress = () =
     xhr.open(method, url, async);
     xhr.send(data);
   });
+}
+
+function generateNodeByTemp(tmpCls, data) {
+  const tmp = document.querySelector(tmpCls);
+  const clone = document.importNode(tmp.content, true);
+  for (const k of Object.keys(data)) {
+    clone.querySelector(k).textContent = data[k];
+  }
+  return clone;
 }

@@ -1,9 +1,18 @@
+@font-face {
+  font-family: 'My Fira Sans';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap; 
+  src: url(/fonts/FiraSans-Regular.ttf);
+}
+
+
 * {
   box-sizing: border-box;
 }
 
 body {
-  font-family: 'Fira Sans', sans-serif;
+  font-family: 'My Fira Sans', sans-serif;
   font-size: 16px;
   color: #222;
 }
@@ -17,9 +26,10 @@ body {
 .file-list {
   width: 600px;
   margin: 30px auto;
-  /* height: 500px; */
+  height: 500px;
   border: 1px solid #e6e6e6;
   border-radius: 6px;
+  overflow: auto;
 }
 
 .file-item .item-progress-value {
@@ -38,18 +48,19 @@ body {
 .file-list .item-progress-bar {
   width: 0%;
   height: 100%;
-  background-color: #07d20940;
+  background-color: #03a9f480;
   position: absolute;
   left: 0;
   top: 0;
   z-index: -1;
+  transition: all .3s;
 }
 
 .file-list .file-item {
   text-align: left;
   height: 70px;
   padding: 14px 17px;
-  /* border-bottom: 1px solid #e6e6e6; */
+  border-bottom: 1px solid #e6e6e6;
   overflow: hidden;
   position: relative;
 }
@@ -62,7 +73,6 @@ body {
 }
 
 .file-list .item-name {
-  margin-bottom: 4px;
   color: #222;
 }
 
@@ -70,6 +80,7 @@ body {
   font-size: 87%;
   font-weight: light;
   color: #a2a2a2;
+  margin-top: -3px;
 }
 
 @media (max-width: 768px) {
@@ -80,7 +91,7 @@ body {
   .file-list {
     width: 100%;
     height: 500px;
-    border: 1px solid black;
+    border: 1px solid #e6e6e6;
   }
 }
 
@@ -96,7 +107,7 @@ body {
   box-shadow: none;
   border: 1px solid #e6e6e6;
   outline: none;
-  font-family: 'Fira Sans', sans-serif;
+  font-family: 'My Fira Sans', sans-serif;
   font-size: 16px;
   cursor: pointer;
 }
